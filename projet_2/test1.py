@@ -33,24 +33,74 @@ def find_links():
 
 # ---------------------------------------------------------------------------------------------------------------------#
 
-def get_informations(links):
+def get_informations(link):
 
-    url = "http://books.toscrape.com/catalogue/worlds-elsewhere-journeys-around-shakespeares-globe_972/index.html"
-    reponse = requests.get(url=url)
+    reponse = requests.get(url=link)
     if reponse.ok:
         soup = BeautifulSoup(reponse.text, features="html.parser")
-        #universal_product_code = soup.find('article')
 
         title = soup.select('h1')[0].text.strip()
-        print(str(title))
+        universal_product_code = soup.select('td')[0].text.strip()
+        category = soup.select('td')[1].text.strip()
+        price_excluding_tax = soup.select('td')[2].text.strip()
+        price_including_tax = soup.select('td')[3].text.strip()
+        number_available = soup.select('td')[5].text.strip()
+        review_rating = soup.select('td')[6].text.strip()
+        product_description = '1'
+        image = soup.find('img')
+        link_image = image["src"]
+
+        print( 'universal_product_code :', universal_product_code)
+        print('title :', title)
+        print('price_including_tax :', price_including_tax)
+        print('price_excluding_tax :', price_excluding_tax)
+        print('number_available :', number_available)
+        print('product_description :', category)
+        print('review_rating :', review_rating)
+        print('link_image :', link_image)
+        informations = universal_product_code \
+                       + ';' + title \
+                       + ';' + price_including_tax \
+                       + ';' + price_excluding_tax \
+                       + ';' + number_available \
+                       + ';' + product_description \
+                       + ';' + category \
+                       + ';' + review_rating \
+                       + ';' + link_image
+
+        print(informations)
+        time.sleep(1)
+    return informations
 
 
 # ---------------------------------------------------------------------------------------------------------------------#
-
-
+# http://books.toscrape.com/catalogue/the-white-cat-and-the-monk-a-retelling-of-the-poem-pangur-ban_865/index.html
+url = 'http://books.toscrape.com/catalogue/worlds-elsewhere-journeys-around-shakespeares-globe_972/index.html'
+informations = get_informations(link=url)
+'''
 links = find_links()
-get_informations(links=links)
+
 with open('linkss.txt', 'w') as file:
     for link in links:
         file.write(link + '\n')
+
+# read txt file
+with open('linkss.txt', 'r') as file_txt:
+    # write csv file
+    with open('books_information.csv', 'w') as file_csv:
+        # entete
+        file_csv.write(
+            'product_page_url;universal_ product_code (upc);title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n'
+        )
+        for link in file_txt:
+            # Supprimer le saut a la  ligne
+            url = link.strip()
+            # get  information for each link on  the txt  file
+            try:
+                informations = get_informations(link=url)
+                # write all information on csv file
+                file_csv.write(url + ';' + informations + '\n')
+            except:
+                print('except in  link : ' + link)
+'''
 
