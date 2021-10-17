@@ -5,10 +5,9 @@ import time
 # ---------------------------------------------------------------------------------------------------------------------#
 
 
-def find_links():
+def find_links(premiere_page, derniere_page):
     links = list()
-    for i in range(1, 2+1):
-        print("Page : ", str(i))
+    for i in range(premiere_page, derniere_page+1):
 
         if i == 1:
             link = url = "http://books.toscrape.com/"
@@ -21,20 +20,22 @@ def find_links():
         if reponse.ok:
             soup = BeautifulSoup(reponse.text, features="html.parser")
             articles = soup.find_all('article')
-            print(len(articles))
+            print('Le nombre de  liens trouvés dans la  page {} est de  : {}'.format(i, len(articles)))
             for article in articles:
                 article = article.find('a')
                 link_book = article["href"]
                 links.append(link + link_book)
             time.sleep(1)
-        print(len(links))
+    print('Le nombre de  liens trouvés entre la page {} et la  page {} est de  : {}'.format(premiere_page, derniere_page, len(links)))
 
     return links
 
 # ---------------------------------------------------------------------------------------------------------------------#
 
+
 def get_informations(link):
 
+    informations = ''
     reponse = requests.get(url=link)
     if reponse.ok:
         soup = BeautifulSoup(reponse.text, features="html.parser")
@@ -49,15 +50,20 @@ def get_informations(link):
         product_description = '1'
         image = soup.find('img')
         link_image = image["src"]
-
-        print( 'universal_product_code :', universal_product_code)
         print('title :', title)
-        print('price_including_tax :', price_including_tax)
-        print('price_excluding_tax :', price_excluding_tax)
-        print('number_available :', number_available)
-        print('product_description :', category)
-        print('review_rating :', review_rating)
-        print('link_image :', link_image)
+        '''
+        print(
+            'universal_product_code :', universal_product_code, '\n',
+            'title :', title, '\n',
+            'price_including_tax :', price_including_tax, '\n',
+            'price_excluding_tax :', price_excluding_tax, '\n',
+            'price_excluding_tax :', price_excluding_tax, '\n',
+            'number_available :', number_available, '\n',
+            'product_description :', category, '\n',
+            'review_rating :', review_rating, '\n',
+            'link_image :', link_image
+        )
+        '''
         informations = universal_product_code \
                        + ';' + title \
                        + ';' + price_including_tax \
@@ -68,18 +74,15 @@ def get_informations(link):
                        + ';' + review_rating \
                        + ';' + link_image
 
-        print(informations)
         time.sleep(1)
     return informations
 
 
 # ---------------------------------------------------------------------------------------------------------------------#
-# http://books.toscrape.com/catalogue/the-white-cat-and-the-monk-a-retelling-of-the-poem-pangur-ban_865/index.html
-url = 'http://books.toscrape.com/catalogue/worlds-elsewhere-journeys-around-shakespeares-globe_972/index.html'
-informations = get_informations(link=url)
-'''
-links = find_links()
 
+# find links for all books
+links = find_links(premiere_page=1, derniere_page=50)
+# écrire les liens dans  un fichier text
 with open('linkss.txt', 'w') as file:
     for link in links:
         file.write(link + '\n')
@@ -87,7 +90,7 @@ with open('linkss.txt', 'w') as file:
 # read txt file
 with open('linkss.txt', 'r') as file_txt:
     # write csv file
-    with open('books_information.csv', 'w') as file_csv:
+    with open('books_information.csv', 'w', encoding='utf-8') as file_csv:
         # entete
         file_csv.write(
             'product_page_url;universal_ product_code (upc);title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n'
@@ -102,5 +105,5 @@ with open('linkss.txt', 'r') as file_txt:
                 file_csv.write(url + ';' + informations + '\n')
             except:
                 print('except in  link : ' + link)
-'''
+
 
