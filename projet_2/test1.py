@@ -47,7 +47,8 @@ def get_informations(link):
         price_including_tax = soup.select('td')[3].text.strip()
         number_available = soup.select('td')[5].text.strip()
         review_rating = soup.select('td')[6].text.strip()
-        product_description = '1'
+        article = soup.find("article", {"class": "product_page"}).findAll('p')[3]
+        product_description = ''.join(article.findAll(text=True))
         image = soup.find('img')
         link_image = image["src"]
         print('title :', title)
@@ -79,7 +80,6 @@ def get_informations(link):
 
 
 # ---------------------------------------------------------------------------------------------------------------------#
-
 # find links for all books
 links = find_links(premiere_page=1, derniere_page=50)
 # écrire les liens dans  un fichier text
@@ -105,5 +105,4 @@ with open('linkss.txt', 'r') as file_txt:
                 file_csv.write(url + ';' + informations + '\n')
             except:
                 print('except in  link : ' + link)
-
 
