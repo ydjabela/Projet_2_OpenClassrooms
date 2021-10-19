@@ -40,7 +40,13 @@ def find_links(premiere_page, derniere_page, url_categorie):
                 link_book = article["href"].replace('../../../', '')
                 links.append(link + link_book)
             time.sleep(1)
-    print('Le nombre de  liens trouvés entre la page {} et la  page {} est de  : {}'.format(premiere_page, derniere_page, len(links)))
+    if derniere_page == 1:
+        print('Le nombre de  liens trouvés dans page {} est de  : {}'.format(derniere_page, len(links)))
+    else:
+        print('Le nombre de  liens trouvés entre la page {} et la  page {} est de  : {}'.format(premiere_page,
+                                                                                                derniere_page,
+                                                                                                len(links)))
+
 
     return links
 
