@@ -93,7 +93,14 @@ with open('linkss.txt', 'r') as file_txt:
     with open('books_information.csv', 'w', encoding='utf-8') as file_csv:
         # entete
         file_csv.write(
-            'product_page_url;universal_ product_code (upc);title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n'
+            'product_page_url;'
+            'universal_ product_code (upc);'
+            'title;price_including_tax;'
+            'price_excluding_tax;'
+            'number_available;'
+            'product_description;'
+            'category;review_rating;'
+            'image_url\n'
         )
         for link in file_txt:
             # Supprimer le saut a la  ligne
