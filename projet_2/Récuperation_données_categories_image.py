@@ -2,7 +2,7 @@ import requests
 import urllib.request
 from bs4 import BeautifulSoup
 import time
-
+import os
 
 # ---------------------------------------------------------------------------------------------------------------------#
 
@@ -101,12 +101,13 @@ def get_informations(link):
         product_description = ''.join(article.findAll(text=True)).replace(';', '.')
         image = soup.find('img')
         link_image = image["src"].replace('../../', 'http://books.toscrape.com/')
-        print('title :', title)
-        try:
+        title_image = ''.join(char for char in title if char.isalnum())
+        print('title :', title, title_image)
 
-            with urllib.request.urlopen(link_image) as f:
-                html = f.read().decode('utf-8')
-                print(html)
+        try:
+            with open('Images/{}.jpg'.format(title_image), 'wb') as f:
+                f.write(urllib.request.urlopen(link_image).read())
+                print("download successful")
         except:
             print("==================> Image  non telecharger")
             pass
@@ -127,6 +128,10 @@ def get_informations(link):
 
 
 to_update = str(input("Do  you need to update the  links or categorie Y|N ? "))
+files = ('Images', 'CSV_File', 'TXT_File')
+for file in files:
+    if not os.path.exists(os.path.join('.', file)):
+        os.mkdir(os.path.join('.', file))
 if to_update in('Y', 'y'):
 
     url = 'http://books.toscrape.com/'
@@ -146,18 +151,18 @@ if to_update in('Y', 'y'):
         links = find_books_links(premiere_page=1, derniere_page=nombre_pages, url_categorie=url_categorie)
 
         # écrire les liens dans  un fichier text
-        with open('categorie {} links.txt'.format(i), 'w') as file:
+        with open('TXT_File/categorie {} links.txt'.format(i), 'w') as file:
             for link in links:
                 file.write(link + '\n')
 
-for i in range(1, 1+1):
+for i in range(1, 50+1):
 
     print('Categorie {} '.format(i))
 
     # read txt file et search information for each book link
-    with open('categorie {} links.txt'.format(i), 'r') as file_txt:
+    with open('TXT_File/categorie {} links.txt'.format(i), 'r') as file_txt:
         # write csv file
-        with open('books_information categorie {}.csv'.format(i), 'w', encoding='utf-8') as file_csv:
+        with open('CSV_File/books_information categorie {}.csv'.format(i), 'w', encoding='utf-8') as file_csv:
 
             # entete
             file_csv.write(
@@ -185,3 +190,4 @@ for i in range(1, 1+1):
 
                 except:
                     print('except at  link : ' + link)
+                    pass
