@@ -93,8 +93,8 @@ def get_informations(link):
         title = soup.select('h1')[0].text.strip()
         universal_product_code = soup.select('td')[0].text.strip()
         category = soup.select('td')[1].text.strip()
-        price_excluding_tax = soup.select('td')[2].text.strip()
-        price_including_tax = soup.select('td')[3].text.strip()
+        price_excluding_tax = soup.select('td')[2].text.replace('Â', '')
+        price_including_tax = soup.select('td')[3].text.strip().replace('Â', '')
         number_available = soup.select('td')[5].text.strip()
         review_rating = soup.select('td')[6].text.strip()
         article = soup.find("article", {"class": "product_page"}).findAll('p')[3]
@@ -102,15 +102,17 @@ def get_informations(link):
         image = soup.find('img')
         link_image = image["src"].replace('../../', 'http://books.toscrape.com/')
         title_image = ''.join(char for char in title if char.isalnum())
-        print('title :', title, title_image)
-
+        print('title :', title, price_excluding_tax)
+        with open('Images/{}.jpg'.format(title_image), 'wb') as f:
+            f.write(urllib.request.urlopen(link_image).read())
+        '''
         try:
             with open('Images/{}.jpg'.format(title_image), 'wb') as f:
                 f.write(urllib.request.urlopen(link_image).read())
-                print("download successful")
         except:
-            print("==================> Image  non telecharger")
+            print("except at :  'Images {}.jpg non telecharger".format(title_image))
             pass
+        '''
         informations = universal_product_code \
                        + ';' + title \
                        + ';' + price_including_tax \
@@ -121,7 +123,6 @@ def get_informations(link):
                        + ';' + review_rating \
                        + ';' + link_image
 
-        time.sleep(1)
     return informations
 
 # ---------------------------------------------------------------------------------------------------------------------#
@@ -160,7 +161,7 @@ for i in range(1, 50+1):
     print('Categorie {} '.format(i))
 
     # read txt file et search information for each book link
-    with open('TXT_File/categorie {} links.txt'.format(i), 'r') as file_txt:
+    with open('TXT_File/categorie {} links.txt'.format(i), 'r', encoding='utf-8') as file_txt:
         # write csv file
         with open('CSV_File/books_information categorie {}.csv'.format(i), 'w', encoding='utf-8') as file_csv:
 
