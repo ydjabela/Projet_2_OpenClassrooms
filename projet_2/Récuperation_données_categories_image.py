@@ -10,6 +10,8 @@ def find_books_categorie(url):
 
     urls_categories = list()
     reponse = requests.get(url=url)
+    reponse.encoding = "utf-8"
+
 
     if reponse.ok:
         soup = BeautifulSoup(reponse.text, features="html.parser")
@@ -32,6 +34,7 @@ def find_books_categorie(url):
 def find_pages(url_categorie):
 
     reponse = requests.get(url=url_categorie)
+    reponse.encoding = "utf-8"
     page = 0
 
     if reponse.ok:
@@ -60,6 +63,7 @@ def find_books_links(premiere_page, derniere_page, url_categorie):
 
         link = "http://books.toscrape.com/catalogue/"
         reponse = requests.get(url=url)
+        reponse.encoding = "utf-8"
 
         if reponse.ok:
             soup = BeautifulSoup(reponse.text, features="html.parser")
@@ -86,15 +90,15 @@ def get_informations(link):
 
     informations = ''
     reponse = requests.get(url=link)
-
+    reponse.encoding = "utf-8"
     if reponse.ok:
         soup = BeautifulSoup(reponse.text, features="html.parser")
 
         title = soup.select('h1')[0].text.strip()
         universal_product_code = soup.select('td')[0].text.strip()
         category = soup.select('td')[1].text.strip()
-        price_excluding_tax = soup.select('td')[2].text.replace('Â', '')
-        price_including_tax = soup.select('td')[3].text.strip().replace('Â', '')
+        price_excluding_tax = soup.select('td')[2].text
+        price_including_tax = soup.select('td')[3].text.strip()
         number_available = soup.select('td')[5].text.strip()
         review_rating = soup.select('td')[6].text.strip()
         article = soup.find("article", {"class": "product_page"}).findAll('p')[3]
@@ -102,17 +106,15 @@ def get_informations(link):
         image = soup.find('img')
         link_image = image["src"].replace('../../', 'http://books.toscrape.com/')
         title_image = ''.join(char for char in title if char.isalnum())
-        print('title :', title, price_excluding_tax)
-        with open('Images/{}.jpg'.format(title_image), 'wb') as f:
-            f.write(urllib.request.urlopen(link_image).read())
-        '''
+        print('title :', title)
+
         try:
             with open('Images/{}.jpg'.format(title_image), 'wb') as f:
                 f.write(urllib.request.urlopen(link_image).read())
         except:
-            print("except at :  'Images {}.jpg non telecharger".format(title_image))
+            print("except at :  'Images {}.jpg non télécharger".format(title_image))
             pass
-        '''
+
         informations = universal_product_code \
                        + ';' + title \
                        + ';' + price_including_tax \

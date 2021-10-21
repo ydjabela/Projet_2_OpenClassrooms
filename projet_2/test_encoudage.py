@@ -3,9 +3,10 @@ from bs4 import BeautifulSoup
 
 url = 'http://books.toscrape.com/catalogue/the-republic_78/index.html'
 
-content = requests.get(url)
-if content.ok:
-    soup = BeautifulSoup(content.text, features="html.parser")
+reponse = requests.get(url=url)
+reponse.encoding = "utf-8"
+if reponse.ok:
+    soup = BeautifulSoup(reponse.text, features="html.parser")
     # option 1
-    price_excluding_tax = soup.select('td')[2].text.encode('utf-8')
+    price_excluding_tax = soup.select('td')[2].text
     print(str(price_excluding_tax))
