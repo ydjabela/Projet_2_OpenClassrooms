@@ -16,6 +16,7 @@ def find_links(premiere_page, derniere_page):
             link = "http://books.toscrape.com/catalogue/"
 
         reponse = requests.get(url=url)
+        reponse.encoding = "utf-8"
 
         if reponse.ok:
             soup = BeautifulSoup(reponse.text, features="html.parser")
@@ -37,6 +38,8 @@ def get_informations(link):
 
     informations = ''
     reponse = requests.get(url=link)
+    reponse.encoding = "utf-8"
+
     if reponse.ok:
         soup = BeautifulSoup(reponse.text, features="html.parser")
 
