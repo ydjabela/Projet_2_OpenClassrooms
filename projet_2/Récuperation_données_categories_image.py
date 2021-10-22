@@ -198,8 +198,7 @@ for i in range(1, len(categories_names)):
                 try:
                     informations = get_informations(link=url)
                     # write all information on csv file
-                    informations.encode('utf-8')
-                    file_csv.write(informations + '\n')
+                    file_csv.write(url + ';' + informations + '\n')
 
                 except:
                     print('except at  link : ' + link)
