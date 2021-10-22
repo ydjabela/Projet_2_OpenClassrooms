@@ -86,7 +86,7 @@ def find_books_links(premiere_page, derniere_page, url_categorie):
 # ---------------------------------------------------------------------------------------------------------------------#
 
 
-def get_informations(link):
+def get_informations(link, to_update):
 
     informations = ''
     reponse = requests.get(url=link)
@@ -101,24 +101,25 @@ def get_informations(link):
         price_including_tax = soup.select('td')[3].text.strip()
         number_available = soup.select('td')[5].text.strip()
         review_rating = soup.select('td')[6].text.strip()
-        category_book = soup.find("ul", {"class": "breadcrumb"}).findAll('li')[2].text.strip()
-
         article = soup.find("article", {"class": "product_page"}).findAll('p')[3]
         product_description = ''.join(article.findAll(text=True)).replace(';', '.')
         image = soup.find('img')
         link_image = image["src"].replace('../../', 'http://books.toscrape.com/')
-        title_image = ''.join(char for char in title if char.isalnum())
         print('              Title :', title)
 
-        try:
+        if to_update in('Y', 'y'):
+            category_book = soup.find("ul", {"class": "breadcrumb"}).findAll('li')[2].text.strip()
+            title_image = ''.join(char for char in title if char.isalnum())
             file = 'Images/Categorie {}'.format(category_book)
             if not os.path.exists(os.path.join('.', file)):
                 os.mkdir(os.path.join('.', file))
-            with open('Images/Categorie {}/{}.jpg'.format(category_book, universal_product_code), 'wb') as f:
-                f.write(urllib.request.urlopen(link_image).read())
-        except:
-            print("except at :  'Images {}.jpg non télécharger".format(title_image))
-            pass
+            try:
+
+                with open('Images/Categorie {}/{}.jpg'.format(category_book, universal_product_code), 'wb') as f:
+                    f.write(urllib.request.urlopen(link_image).read())
+            except:
+                print("except at :  'Images {}.jpg non télécharger".format(title_image))
+                pass
 
         informations = universal_product_code \
                        + ';' + title \
@@ -151,7 +152,7 @@ if to_update in('Y', 'y'):
     for i in range(1, len(urls_categories)):
         url_categorie = urls_categories[i]
         categorie_name = categories_names[i]
-        print('Categorie {}: {}.txt'.format(i, categorie_name))
+        print('Categorie {}: {}'.format(i, categorie_name))
 
         # Chercher le  nombre de  page de chaque catégorie
         nombre_pages = find_pages(url_categorie=url_categorie)
@@ -196,7 +197,8 @@ for i in range(1, len(categories_names)):
 
                 # get  information for each link on  the txt  file
                 try:
-                    informations = get_informations(link=url)
+                    informations = get_informations(link=url, to_update=to_update)
+
                     # write all information on csv file
                     file_csv.write(url + ';' + informations + '\n')
 
