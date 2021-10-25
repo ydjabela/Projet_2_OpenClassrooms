@@ -110,12 +110,12 @@ def get_informations(link, to_update):
         if to_update in('Y', 'y'):
             category_book = soup.find("ul", {"class": "breadcrumb"}).findAll('li')[2].text.strip()
             title_image = ''.join(char for char in title if char.isalnum())
-            file = 'Images/Categorie {}'.format(category_book)
+            file = 'images/categorie {}'.format(category_book)
             if not os.path.exists(os.path.join('.', file)):
                 os.mkdir(os.path.join('.', file))
             try:
 
-                with open('Images/Categorie {}/{}.jpg'.format(category_book, universal_product_code), 'wb') as f:
+                with open('images/categorie {}/{}.jpg'.format(category_book, universal_product_code), 'wb') as f:
                     f.write(urllib.request.urlopen(link_image).read())
             except:
                 print("except at :  'Images {}.jpg non télécharger".format(title_image))
@@ -136,72 +136,92 @@ def get_informations(link, to_update):
 # ---------------------------------------------------------------------------------------------------------------------#
 
 
-to_update = str(input("Do  you need to update the  links or categorie Y|N ? "))
+def update_links_books(urls_categories, categories_names):
 
-# files creations
-files = ('Images', 'CSV_File', 'TXT_File')
-for file in files:
-    if not os.path.exists(os.path.join('.', file)):
-        os.mkdir(os.path.join('.', file))
+        for i in range(1, len(urls_categories)):
+            url_categorie = urls_categories[i]
+            categorie_name = categories_names[i]
+            print('Categorie {}: {}'.format(i, categorie_name))
 
-# find Categories
-url = 'http://books.toscrape.com/'
-urls_categories, categories_names = find_books_categorie(url=url)
+            # Chercher le  nombre de  page de chaque catégorie
+            nombre_pages = find_pages(url_categorie=url_categorie)
 
-if to_update in('Y', 'y'):
-    for i in range(1, len(urls_categories)):
-        url_categorie = urls_categories[i]
+            # find links for all books de la catégorie
+            links = find_books_links(premiere_page=1, derniere_page=nombre_pages, url_categorie=url_categorie)
+
+            # écrire les liens dans  un fichier text
+            with open('txt_file/categorie {}.txt'.format(categorie_name), 'w') as file:
+                for link in links:
+                    file.write(link + '\n')
+
+# ---------------------------------------------------------------------------------------------------------------------#
+
+
+def get_and_save_information(categories_names, to_update):
+    for i in range(1, len(categories_names)):
         categorie_name = categories_names[i]
-        print('Categorie {}: {}'.format(i, categorie_name))
+        if not os.path.exists(os.path.join('.', 'txt_file/categorie {}.txt'.format(categorie_name))):
+            print('You need to update the  links or categorie')
+            break
+        print('Categorie N° {} : {} '.format(i, categorie_name))
 
-        # Chercher le  nombre de  page de chaque catégorie
-        nombre_pages = find_pages(url_categorie=url_categorie)
+        # read txt file et search information for each book link
+        with open('txt_file/categorie {}.txt'.format(categorie_name), 'r', encoding='utf-8') as file_txt:
+            # write csv file
+            with open('csv_file/categorie {} informations.csv'.format(categorie_name), 'w',
+                      encoding='utf-8-sig') as file_csv:
 
-        # find links for all books de la catégorie
-        links = find_books_links(premiere_page=1, derniere_page=nombre_pages, url_categorie=url_categorie)
+                # entete
+                file_csv.write(
+                    'product_page_url;'
+                    'universal_ product_code (upc);'
+                    'title;'
+                    'price_including_tax;'
+                    'price_excluding_tax;'
+                    'number_available;'
+                    'product_description;'
+                    'category;review_rating;'
+                    'image_url\n'
+                )
 
-        # écrire les liens dans  un fichier text
-        with open('TXT_File/Categorie {}.txt'.format(categorie_name), 'w') as file:
-            for link in links:
-                file.write(link + '\n')
+                for link in file_txt:
 
-for i in range(1, len(categories_names)):
-    categorie_name = categories_names[i]
-    if not os.path.exists(os.path.join('.', 'TXT_File/Categorie {}.txt'.format(categorie_name))):
-        print('You need to update the  links or categorie')
-        break
-    print('Categorie N° {} : {} '.format(i, categorie_name))
+                    # Supprimer le saut a la  ligne
+                    url = link.strip()
 
-    # read txt file et search information for each book link
-    with open('TXT_File/Categorie {}.txt'.format(categorie_name), 'r', encoding='utf-8') as file_txt:
-        # write csv file
-        with open('CSV_File/Categorie {} informations.csv'.format(categorie_name), 'w', encoding='utf-8') as file_csv:
+                    # get  information for each link on  the txt  file
+                    try:
+                        informations = get_informations(link=url, to_update=to_update)
 
-            # entete
-            file_csv.write(
-                'product_page_url;'
-                'universal_ product_code (upc);'
-                'title;'
-                'price_including_tax;'
-                'price_excluding_tax;'
-                'number_available;'
-                'product_description;'
-                'category;review_rating;'
-                'image_url\n'
-            )
+                        # write all information on csv file
+                        file_csv.write(url + ';' + informations + '\n')
 
-            for link in file_txt:
+                    except:
+                        print('except at  link : ' + link)
+                        pass
 
-                # Supprimer le saut a la  ligne
-                url = link.strip()
+# ---------------------------------------------------------------------------------------------------------------------#
 
-                # get  information for each link on  the txt  file
-                try:
-                    informations = get_informations(link=url, to_update=to_update)
 
-                    # write all information on csv file
-                    file_csv.write(url + ';' + informations + '\n')
+def bases_de_python_pour_lanalyse_de_marche(url):
 
-                except:
-                    print('except at  link : ' + link)
-                    pass
+    # files creations
+    files = ('images', 'csv_file', 'txt_file')
+    for file in files:
+        if not os.path.exists(os.path.join('.', file)):
+            os.mkdir(os.path.join('.', file))
+
+    # find Categories
+    urls_categories, categories_names = find_books_categorie(url=url)
+
+    to_update = str(input("Do  you need to update the  links or categorie Y|N ? "))
+    if to_update in ('Y', 'y'):
+        update_links_books(urls_categories=urls_categories, categories_names=categories_names)
+
+    get_and_save_information(categories_names=categories_names, to_update=to_update)
+
+# ---------------------------------------------------------------------------------------------------------------------#
+
+
+url = 'http://books.toscrape.com/'
+bases_de_python_pour_lanalyse_de_marche(url=url)
