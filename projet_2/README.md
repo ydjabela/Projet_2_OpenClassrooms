@@ -4,7 +4,7 @@
 ### Récupérer le projet :
 
 ```
-git clone https://github.com/ydjabela/Projet_OpenClassrooms/edit/main/projet_2
+git clone https://github.com/ydjabela/Projet_2_OpenClassrooms
 ```
 
 ### Création de l'environnement virtuel
