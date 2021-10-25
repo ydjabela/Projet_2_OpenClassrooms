@@ -1,5 +1,5 @@
 # Projet OpenClassrooms
-# projet 3
+# projet 3 Designez une application Python adaptée aux besoins d'un client
 
 # Récupérer le projet :
 
