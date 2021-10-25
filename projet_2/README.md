@@ -26,13 +26,13 @@ Projet_2\Scripts\activate.bat
 pip install -r requirements.txt
 ```
 
-## Exécuter le scraper (à la racine du projet) :
+## Exécuter le scripts:
 
 ```python
 # pour exécuter le scraper complet
 python P2_04_codesource_recuperation_donnees_categories_avec_image.py
 # la premiere  fois  il faut choisir Y "yes" pour  mettre a  jour les  lien et creation des dossier et pour telecharger  les  images
-# le  promier  process sert a chercher  les liens et les  pages de chaque categorie
+# le  premier  process sert a chercher  les liens et les  pages de chaque categorie
 # le deuxieme  process sert a obtenir toutes  les  informations necessaires pour chaque  livre 
 
 # scraper correspondant à l'étape 1 du projet
@@ -49,8 +49,9 @@ python P2_04_codesource_recuperation_donnees_categories_avec_image.py
 
 ```
 # Cette commande sera obligatoire à chaque fois que vous voudrez travailler avec le cours. Dans le même terminal, tapez maintenant
+```
 pip install -r requirements.txt
-
-#Contributeurs
+```
+# Contributeurs
 Yacine Djabela
 Stephane Didier
