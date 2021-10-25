@@ -47,7 +47,7 @@ python P2_03_codesource_recuperation_donnee_toute_categorie.py
 # scraper correspondant à l'étape 4 du projet
 python P2_04_codesource_recuperation_donnees_categories_avec_image.py
 
-
+```
 # Cette commande sera obligatoire à chaque fois que vous voudrez travailler avec le cours. Dans le même terminal, tapez maintenant
 pip install -r requirements.txt
 
