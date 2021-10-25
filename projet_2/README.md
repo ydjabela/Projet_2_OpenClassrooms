@@ -1,7 +1,5 @@
-# Projet_OpenClassrooms
-# projet 2 
-# p2-da-python-analyse-de-marche
-# P2 - DA Python - Utilisez les bases de Python pour l'analyse de marché
+# Projet OpenClassrooms
+# projet 2 Utilisez les bases de Python pour l'analyse de marché
 
 ## Récupérer le projet :
 
