@@ -35,24 +35,24 @@ pour télécharger  les  images
 - le deuxieme  process sert a obtenir toutes  les  informations necessaires pour chaque  livre dans chaque catégorie
 - à la fin du process faut récupéré  les fichiers csv et les  images pour les analysés
 ```
-python P2_04_codesource_recuperation_donnees_categories_avec_image.py
+python3 P2_04_codesource_recuperation_donnees_categories_avec_image.py
 ```
 
 #### scraper correspondant à l'étape 1 du projet
 ```
-python P2_01_codesource_test1.py
+python3 P2_01_codesource_test1.py
 ```
 #### scraper correspondant à l'étape 2 du projet
 ```
-python P2_02_codesource_recupération_donnee_une_categorie.py
+python3 P2_02_codesource_recupération_donnee_une_categorie.py
 ```
 #### scraper correspondant à l'étape 3 du projet
 ```
-python P2_03_codesource_recuperation_donnee_toute_categorie.py
+python3 P2_03_codesource_recuperation_donnee_toute_categorie.py
 ```
 #### scraper correspondant à l'étape 4 du projet
 ```
-python P2_04_codesource_recuperation_donnees_categories_avec_image.py
+python3 P2_04_codesource_recuperation_donnees_categories_avec_image.py
 ```
 #### Cette commande sera obligatoire à chaque fois que vous voudrez travailler avec le cours. Dans le même terminal, tapez maintenant
 ```

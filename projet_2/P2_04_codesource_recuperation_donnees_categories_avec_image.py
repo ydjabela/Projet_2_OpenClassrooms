@@ -1,3 +1,4 @@
+
 import requests
 import urllib.request
 from bs4 import BeautifulSoup
@@ -5,6 +6,7 @@ import time
 import os
 
 # ---------------------------------------------------------------------------------------------------------------------#
+
 
 def find_books_categorie(url):
 
@@ -168,8 +170,7 @@ def get_and_save_information(categories_names, to_update):
         # read txt file et search information for each book link
         with open('txt_file/categorie {}.txt'.format(categorie_name), 'r', encoding='utf-8') as file_txt:
             # write csv file
-            with open('csv_file/categorie {} informations.csv'.format(categorie_name), 'w',
-                      encoding='utf-8-sig') as file_csv:
+            with open('csv_file/categorie {} informations.csv'.format(categorie_name), 'w', encoding='utf-8-sig') as file_csv:
 
                 # entete
                 file_csv.write(
